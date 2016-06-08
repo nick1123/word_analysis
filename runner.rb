@@ -30,9 +30,11 @@ def gram_frequency(words, n)
   process_hash(hash, "frequency_of_#{n}grams.tsv")
 end
 
-
-words = IO.readlines("dictionary_small.txt").map {|word| word.strip}.map {|word| word.downcase}
+dictionary = "dictionary_small.txt"
+dictionary = "dictionary.txt"
+words = IO.readlines(dictionary).map {|word| word.strip}.map {|word| word.downcase}
 letter_frequency(words)
 gram_frequency(words, 2)
 gram_frequency(words, 3)
 gram_frequency(words, 4)
+gram_frequency(words, 5)
