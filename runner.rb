@@ -30,11 +30,29 @@ def gram_frequency(words, n)
   process_hash(hash, "frequency_of_#{n}grams.tsv")
 end
 
+def add_hole_to_gram(word)
+  word.split('').map.with_index {|char, index| index == 0 || index == (word.size - 1) ? char : '_' }.join('')
+end
+
+def gram_with_hole_frequency(words, n)
+  hash = Hash.new(0)
+  words.each do |word|
+    ngrams(n, word).each {|letter_sequence| hash[add_hole_to_gram(letter_sequence.join(''))] += 1}
+  end
+
+  process_hash(hash, "frequency_of_#{n}grams_with_hole.tsv")
+end
+
 dictionary = "dictionary_small.txt"
 dictionary = "dictionary.txt"
 words = IO.readlines(dictionary).map {|word| word.strip}.map {|word| word.downcase}
-letter_frequency(words)
-gram_frequency(words, 2)
-gram_frequency(words, 3)
-gram_frequency(words, 4)
-gram_frequency(words, 5)
+#letter_frequency(words)
+#gram_frequency(words, 2)
+#gram_frequency(words, 3)
+#gram_frequency(words, 4)
+#gram_frequency(words, 5)
+#gram_with_hole_frequency(words, 3)
+#gram_with_hole_frequency(words, 4)
+#gram_with_hole_frequency(words, 5)
+gram_with_hole_frequency(words, 6)
+gram_with_hole_frequency(words, 7)
