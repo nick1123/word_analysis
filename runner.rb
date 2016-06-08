@@ -4,7 +4,6 @@ def process_hash(hash, file_name)
   hash.sort {|a,b| b[1] <=> a[1]}.each do |item, count|
     lines << [item, count, (count / sum).round(4)].join("\t")
   end
-  puts lines
 
   File.open(file_name, 'w') {|file_handle| file_handle.write(lines.join("\n")) }
 end
@@ -15,12 +14,25 @@ def letter_frequency(words)
     word.split("").each {|letter| hash[letter] += 1}
   end
 
-  puts hash
-  process_hash(hash, 'letter_frequency.tsv')
+  process_hash(hash, 'frequency_of_letters.tsv')
+end
+
+def ngrams(n, word)
+  word.split('').each_cons(n).to_a
+end
+
+def gram_frequency(words, n)
+  hash = Hash.new(0)
+  words.each do |word|
+    ngrams(n, word).each {|letter_sequence| hash[letter_sequence.join('')] += 1}
+  end
+
+  process_hash(hash, "frequency_of_#{n}grams.tsv")
 end
 
 
 words = IO.readlines("dictionary_small.txt").map {|word| word.strip}.map {|word| word.downcase}
 letter_frequency(words)
-
-puts words[0..9].inspect
+gram_frequency(words, 2)
+gram_frequency(words, 3)
+gram_frequency(words, 4)
