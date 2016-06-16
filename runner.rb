@@ -12,6 +12,10 @@ end
 
 matcher_generator = MatcherGenerator.new
 solution_tester = SolutionTester.new(positive_test_cases, negative_test_cases)
-solution_set = SolutionSet.new(matcher_generator, max_population_size=10, matchers_per_solution=15, solution_tester)
+
+solution_generator = SolutionGenerator.new(matcher_generator, matchers_per_solution=15)
+solution_set = SolutionSet.new(solution_generator, max_population_size=10, solution_tester)
 
 puts solution_set
+
+solution_set.iterate

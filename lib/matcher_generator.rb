@@ -1,13 +1,20 @@
 class MatcherGenerator
   def new_match
-    substring = build_2_letter_combos.shuffle[0]
-    Matchers::Substring.new(substring, random_value)
+    Matchers::Substring.new(random_substring, random_value)
   end
 
   private
 
+  def random_substring
+    random_bool ? set_of_single_chars.shuffle[0] : build_2_letter_combos.shuffle[0]
+  end
+
   def random_value
-    rand > 0.5 ? 1 : -1
+    random_bool ? 1 : -1
+  end
+
+  def random_bool
+    rand >= 0.5
   end
 
   # ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",

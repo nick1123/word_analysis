@@ -1,34 +1,32 @@
 class SolutionSet
-  def initialize(matcher_generator, max_population_size, matchers_per_solution, solution_tester)
-    @matcher_generator = matcher_generator
+  def initialize(solution_generator, max_population_size, solution_tester)
+    @solution_generator = solution_generator
     @max_population_size = max_population_size
-    @matchers_per_solution = matchers_per_solution
     @solution_tester = solution_tester
-    @solutions = []
+    @solutions = {}
 
-    populate_with_random_solutions
-    score_solutions
+    populate(true)
   end
 
   def iterate
-
+    # kill off a member
+    # add a new member
+    # mutate a member
+    #
+    puts TournamentSelector.select_2_solutions_for_mating(@solutions.values).inspect
   end
 
   private
 
-  def score_solutions
-    @solutions.each do |solution|
+  def populate(create_random)
+    while @solutions.keys.size < @max_population_size
+      solution = @solution_generator.new_solution(create_random)
       solution.score = @solution_tester.solution_score(solution)
-    end
-  end
-
-  def populate_with_random_solutions
-    while @solutions.size < @max_population_size
-      @solutions << Solution.new(@matcher_generator, @matchers_per_solution)
+      @solutions[solution.finger_print] = solution
     end
   end
 
   def to_s
-    @solutions.join("\n")
+    @solutions.values.sort.join("\n")
   end
 end
