@@ -13,3 +13,7 @@ Make sure there are the same number of positive and negative test cases
 
     head -n 550000 negative_test_cases.txt > tmp_file && mv tmp_file negative_test_cases.txt
     head -n 550000 positive_test_cases.txt > tmp_file && mv tmp_file positive_test_cases.txt
+
+Build matchers
+
+    ruby build_matchers.rb 
