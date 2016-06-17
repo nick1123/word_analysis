@@ -2,12 +2,15 @@ require 'digest'
 
 class Solution
   attr_accessor :score
+  attr_reader :matchers
 
   include Comparable
 
-  def initialize(matcher_generator, population_size)
-    @matchers = (1..population_size).map {|i| matcher_generator.new_match}.sort
+  def initialize(matchers, type)
+    @matchers = matchers
+    @type = type
     @score = 0
+    @age = 1
   end
 
   def is_word?(word)
@@ -15,19 +18,37 @@ class Solution
     return value > 0
   end
 
+  def increment_age
+    @age += 1
+  end
+
   def to_s
-    [finger_print, "score: #{@score}", matchers_to_s].join("\t")
+    [finger_print, "score #{@score}", "score density #{score_density}", "age #{@age}", "type #{@type}", matchers_to_s].join("\t")
   end
 
   def <=>(other)
-    other.score <=> @score
+    score_density <=> other.score_density
   end
 
   def finger_print
-    @finger_print ||= ("FP_#{Digest::MD5.hexdigest(matchers_to_s)}")[0..7].to_sym
+    @finger_print ||= ("#{Digest::MD5.hexdigest(matchers_to_s)}")[0..5].to_sym
+  end
+
+  def score_density
+    @score_density ||= compute_score_density
   end
 
   private
+
+  def compute_score_density
+    square = (score - 50) ** 2
+    coefficient = (score >= 50 ? 1 : -1)
+    # coefficient * (((score - 50) ** 2) / (@matchers.size.to_f ** 2)).round(2)
+    coefficient * (square / @matchers.size.to_f).round(3)
+    # ((score - 50) / @matchers.size.to_f).round(3)
+    # score
+    # coefficient * ((score - 50) ** 2)
+  end
 
   def matchers_to_s
     @matchers.join("\t")

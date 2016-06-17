@@ -1,7 +1,7 @@
 class SolutionTester
   def initialize(positive_test_cases, negative_test_cases)
-    @positive_test_cases = positive_test_cases[0..9]
-    @negative_test_cases = negative_test_cases[0..9]
+    @positive_test_cases = positive_test_cases#[0..999]
+    @negative_test_cases = negative_test_cases#[0..999]
   end
 
   def solution_score(solution)
