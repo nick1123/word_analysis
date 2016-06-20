@@ -1,7 +1,6 @@
 class SolutionGenerator
-  def initialize(matcher_generator, max_matchers_per_solution)
+  def initialize(matcher_generator)
     @matcher_generator = matcher_generator
-    @max_matchers_per_solution = max_matchers_per_solution
   end
 
   def new_solution(create_random, all_solutions)
@@ -12,38 +11,39 @@ class SolutionGenerator
     end
   end
 
-  # def create_mutant(old_solution)
-  #   matchers = old_solution.matchers.shuffle.tap do |m|
-  #     m.pop
-  #     m << @matcher_generator.new_match
-  #   end
-  #
-  #   Solution.new(matchers, :mutant)
-  # end
+
+   def create_mutant(old_solution)
+     new_set_of_matchers = old_solution.matchers
+
+     index_of_matcher_to_mutate = rand(new_set_of_matchers.count)
+     matcher_to_mutate = new_set_of_matchers[index_of_matcher_to_mutate]
+     copied_matcher = matcher_to_mutate.copy
+     copied_matcher.mutate!
+     new_set_of_matchers[index_of_matcher_to_mutate] = copied_matcher
+
+     Solution.new(new_set_of_matchers, :mutant)
+  end
 
   private
 
-  def matchers_for_this_solution
-    # rand(@max_matchers_per_solution) + 1
-    @max_matchers_per_solution
-  end
 
   def mate_2_solutions(all_solutions)
     min_score = all_solutions.min.score
     parents = TournamentSelector.select_2_solutions_for_mating(all_solutions, min_score)
 
-    child_matchers = parents.map do |solution|
-      solution.matchers
-    end.flatten.shuffle[0..(matchers_for_this_solution - 1)].sort
+    parents_matcher_count = parents[0].matchers.size
+    new_set_of_matchers = (0..(parents_matcher_count - 1)).map.with_index do |i, index|
+      random_bool ? parents[0].matchers[index].copy : parents[1].matchers[index].copy
+    end
 
-    Solution.new(child_matchers, :child)
-  end
-
-  def random_matchers
-    (1..matchers_for_this_solution).map { |i| @matcher_generator.new_match}.sort
+    Solution.new(new_set_of_matchers, :child)
   end
 
   def random_solution
-    Solution.new(random_matchers, :random)
+    Solution.new(@matcher_generator.new_set_of_matchers, :random)
+  end
+
+  def random_bool
+    rand >= 0.5
   end
 end

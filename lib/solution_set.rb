@@ -12,7 +12,7 @@ class SolutionSet
     increment_age
     kill_off_solution
     populate(false)
-    #mutate_a_solution
+    mutate_a_solution
   end
 
   private
@@ -52,6 +52,6 @@ class SolutionSet
   end
 
   def to_s
-    @solutions.values.sort.reverse[0..30].flatten.join("\n")
+    @solutions.values.sort.reverse[0..59].flatten.join("\n")
   end
 end

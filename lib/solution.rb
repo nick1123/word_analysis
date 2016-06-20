@@ -23,7 +23,7 @@ class Solution
   end
 
   def to_s
-    [finger_print, "score #{@score}", "score density #{score_density}", "age #{@age}", "type #{@type}", matchers_to_s].join("\t")
+    [finger_print, "score #{@score}", "score density #{score_density.round(1)}", "age #{@age}", "type #{@type}", matchers_to_s].join("\t")
   end
 
   def <=>(other)
@@ -44,10 +44,13 @@ class Solution
     square = (score - 50) ** 2
     coefficient = (score >= 50 ? 1 : -1)
     # coefficient * (((score - 50) ** 2) / (@matchers.size.to_f ** 2)).round(2)
-    coefficient * (square / @matchers.size.to_f).round(3)
+    # coefficient * (square / @matchers.size.to_f).round(3)
     # ((score - 50) / @matchers.size.to_f).round(3)
     # score
     # coefficient * ((score - 50) ** 2)
+    coefficient * square
+
+    score - 50
   end
 
   def matchers_to_s

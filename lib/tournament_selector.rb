@@ -9,7 +9,6 @@ module TournamentSelector
     solutions.select {|s| finger_prints.include?(s.finger_print)}
   end
 
-  # Solutions with higher density scores get more raffle tickets
   def self.raffle_favoring_high_score_density(solutions)
     solutions.map do |solution|
       tickets = (10 * solution.score_density).round
@@ -17,7 +16,6 @@ module TournamentSelector
     end.flatten.shuffle
   end
 
-  # Solutions with lower density scores get more raffle tickets
   def self.raffle(solutions, gets_more_tickets)
     max = max_score_density(solutions)
     min = min_score_density(solutions)
